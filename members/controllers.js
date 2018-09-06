@@ -25,7 +25,7 @@ module.exports = {
     }
 
     try {
-      req.body.password = await hashPassword(req.body.password)
+      req.body.password = await Member.hashPassword(req.body.password)
       let updatedMember = await Member.updateOne({ _id: id }, req.body)
       res.json({
         message: 'Successfully set up your login details',
