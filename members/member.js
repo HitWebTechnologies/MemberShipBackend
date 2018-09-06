@@ -5,10 +5,15 @@ const schema = new mongoose.Schema({
   regNumber: String,
   phoneNumber: String,
   level: String,
-  degree: String,
+  degreeProgram: String,
   username: String,
   password: String
 })
 
-schema.statics.isIdValid = mongoose.Types.ObjectId.isValid
+schema.statics = {
+  isIdValid (id) {
+    return mongoose.Types.ObjectId.isValid(id)
+  }
+}
+
 module.exports = mongoose.model('Member', schema)
