@@ -25,11 +25,33 @@ module.exports = {
     }
 
     try {
+      req.body.password = await hashPassword(req.body.password)
       let updatedMember = await Member.updateOne({ _id: id }, req.body)
       res.json({
-        message: 'Successfully set up your login details'
+        message: 'Successfully set up your login details',
+        member: updatedMember
       })
     } catch (error) {
+      res.status(500).json({ message: 'An unexpected error occured '})
+    }
+  },
+
+  async login (req, res, next) {
+    if (await Member.login(req.body)) {
+      res.json({
+        message: 'successfully logged in'
+      })
+    }
+  },
+
+
+  async getAllMembers (req, res, next) {
+    try {
+      const members = await Member.find({})
+      res.json({
+        members
+      })
+    } catch (err) {
       res.status(500).json({ message: 'An unexpected error occured '})
     }
   }

@@ -1,3 +1,4 @@
+const { hashPassword } = require('../lib/auth')
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
   fullName: String,
@@ -13,7 +14,15 @@ const schema = new mongoose.Schema({
 schema.statics = {
   isIdValid (id) {
     return mongoose.Types.ObjectId.isValid(id)
+  },
+
+  async hashPassword (password) {
+    return bcrypt.hash(password, 10)
+  },
+
+  login (credentials) {
+    // do 
+    return true
   }
 }
-
 module.exports = mongoose.model('Member', schema)
