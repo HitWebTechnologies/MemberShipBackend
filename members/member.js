@@ -1,4 +1,4 @@
-const { hashPassword } = require('../lib/auth')
+const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
   fullName: String,
@@ -21,7 +21,7 @@ schema.statics = {
   },
 
   login (credentials) {
-    // do 
+    // do check the suplied credentials against those in the db
     return true
   }
 }
