@@ -8,7 +8,8 @@ const schema = new mongoose.Schema({
   level: String,
   degreeProgram: String,
   username: String,
-  password: String
+  password: String,
+  twitterHandle: String
 })
 
 schema.statics = {
