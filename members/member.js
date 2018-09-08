@@ -9,7 +9,15 @@ const schema = new mongoose.Schema({
   degreeProgram: String,
   username: String,
   password: String,
-  twitterHandle: String
+  twitterHandle: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
 })
 
 schema.statics = {
