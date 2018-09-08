@@ -3,6 +3,10 @@ const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
   fullName: String,
   gender: String,
+  role: {
+    type: String,
+    default: 'member'
+  },
   emailAddress: String,
   regNumber: String,
   phoneNumber: String,
