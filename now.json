@@ -5,6 +5,8 @@
     "MONGO_USERNAME": "@mongo_username",
     "MONGO_PASSWORD": "@mongo_password",
     "MONGO_HOST": "@mongo_host",
-    "MONGO_DATABASE": "@mongo_database"
+    "MONGO_DATABASE": "@mongo_database",
+    "SENDGRID_API_KEY": "@sendgrid_api_key",
+    "JWT_SECRET": "@jwt_secret"
   }
 }
