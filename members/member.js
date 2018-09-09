@@ -8,7 +8,10 @@ const schema = new mongoose.Schema({
     default: 'member'
   },
   emailAddress: String,
-  regNumber: String,
+  regNumber: {
+    type: String,
+    unique: true
+  },
   phoneNumber: String,
   level: String,
   degreeProgram: String,
@@ -22,6 +25,10 @@ const schema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -34,9 +41,19 @@ schema.statics = {
     return bcrypt.hash(password, 10)
   },
 
-  login (credentials) {
+  async login ({ regNumber, password}) {
     // do check the suplied credentials against those in the db
-    return true
+    try {
+      const member = await this.find({ regNumber })
+      // member exists
+      if (member) {
+        return (await bcrypt.compare(password, member.password))
+      }
+      return false
+    } catch (error) {
+      return false
+    }
   }
 }
+
 module.exports = mongoose.model('Member', schema)
