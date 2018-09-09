@@ -5,6 +5,7 @@ module.exports = {
     try {
       const member = new Member(req.body)
       const user = await member.save()
+      Member.sendVerificationEmail(user)
       res.json({
         message: 'Successfully created user',
         user
@@ -29,9 +30,16 @@ module.exports = {
       return res.status(400).json({ message: 'Invalid id' })
     }
 
+    if (!Member.isVerificationTokenValid(req.body.verificationToken)) {
+      return res.status(401).json({ message: 'Invalid Verification Token' })
+    }
+
     try {
       req.body.password = await Member.hashPassword(req.body.password)
-      let updatedMember = await Member.updateOne({ _id: id }, req.body)
+      let updatedMember = await Member.updateOne({ _id: id }, {
+        ...req.body,
+        isVerified: true
+      })
       res.json({
         message: 'Successfully set up your login details',
         member: updatedMember
