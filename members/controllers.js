@@ -11,6 +11,11 @@ module.exports = {
       })
       
     } catch (x) {
+      if (x.code === 11000) {
+        res.status(409).json({
+          message: `Account with regnumber ${req.body.regNumber} already exists`
+        })
+      }
       res.status(500).json({
         message: 'An error occured and we could not create user'
       })
