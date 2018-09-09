@@ -50,9 +50,32 @@ module.exports = {
   },
 
   async login (req, res, next) {
-    if (await Member.login(req.body)) {
-      res.json({
-        message: 'successfully logged in'
+    try {
+      console.log('tryeing to get the member')
+      const { regNumber, password } = req.body
+      const member = await Member.findOne({ regNumber })
+      // member exists
+      if (member) {
+        if (await Member.comparePasswords(password, member.password)) {
+          delete member.password
+          res.json({
+            message: 'successfully logged in',
+            member,
+            token: Member.signJWTtoken(member.emailAddress)
+          })
+        } else {
+          res.status(401).json({
+            message: 'Invalid login details. Try again'
+          })
+        }
+      } else {
+        res.status(401).json({
+          message: 'Invalid login details. Try again'
+        })
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: 'Something nasty happened.'
       })
     }
   },

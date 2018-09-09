@@ -43,23 +43,18 @@ schema.statics = {
     return bcrypt.hash(password, 10)
   },
 
-  async login ({ regNumber, password}) {
-    // do check the suplied credentials against those in the db
-    try {
-      const member = await this.find({ regNumber })
-      // member exists
-      if (member) {
-        return (await bcrypt.compare(password, member.password))
-      }
-      return false
-    } catch (error) {
-      return false
-    }
+  async comparePasswords (password, hashedPassword) {
+    return bcrypt.compare(password, hashedPassword)
   },
 
   isVerificationTokenValid (token) {
     return jwt.verify(token, process.env.JWT_SECRET)
   },
+
+  signJWTtoken (emailAddress) {
+    return jwt.sign({ emailAddress }, process.env.JWT_SECRET)
+  },
+
   sendVerificationEmail (user) {
     const { fullName, emailAddress, _id } = user
     console.log('Receceived email', emailAddress)
@@ -72,8 +67,11 @@ schema.statics = {
       from: 'hitwebtechnologies@gmail.com',
       subject: 'Verify your HitWebTech account',
       html: `
-        <div style="background-color: #f9fbff;border-top: 3px green solid; padding: 50px 100px; font-size: 16px; line-height: 22.4px">
-          <div style="padding: 20px; background-color: #fff; border-radius: 5px" >
+        <div style="background-color: #f9fbff;border-top: 3px green solid; padding: 10px; font-size: 16px; line-height: 22.4px">
+        <div style="padding: 10px; background-color: #fff; border-radius: 5px; margin: 10px 0; color:#fff; text-align: center">
+        Please note that this account was created by a beta version of the registration system and will be deleted today. Make sure you create your real account when the stable version is released
+        </div>
+          <div style="padding: 10px; background-color: #fff; border-radius: 5px" >
             <h3>Hi ${fullName}</h3>
             <p>Thank you for joining HIT Web Technologies. </p>
             <p>You are just left with verifying your account.</p>
@@ -83,12 +81,12 @@ schema.statics = {
             <p>Or you can paste this link in the browser <br> <a href="${url}">${url}</a></p>
           </div>
 
-          <div style="border-top: 2px grey solid; padding: 20px; padding-top: 50px; margin-top:50px">
+          <div style="border-top: 2px grey solid; padding: 10px; padding-top: 10px; margin-top:10px">
             <a style="padding: 16px 24px; border-radius: 4px; background-color:#1da1f2; color: #fff; text-decoration: none; margin-right: 30px" href="https://twitter.com/HitWebTech">Follow @HitWebTech</a>
             <a href="https://hitwebtech.co.zw">www.hitwebtech.co.zw</a>
           </div>
         </div>
-      `,
+        `,
     };
     sgMail.send(msg);
 
