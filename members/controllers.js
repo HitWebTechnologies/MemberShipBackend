@@ -3,6 +3,7 @@ module.exports = {
   async registerMember (req, res, next) {
     // please validate the following inputs
     try {
+      req.body.regNumber = req.body.regNumber ? req.body.regNumber.toLowerCase() : ''
       const member = new Member(req.body)
       const user = await member.save()
       Member.sendVerificationEmail(user)
@@ -51,9 +52,8 @@ module.exports = {
 
   async login (req, res, next) {
     try {
-      console.log('tryeing to get the member')
-      const { regNumber, password } = req.body
-      const member = await Member.findOne({ regNumber })
+      const { regNumber = '', password } = req.body
+      const member = await Member.findOne({ regNumber: regNumber.toLowerCase() })
       // member exists
       if (member) {
         if (await Member.comparePasswords(password, member.password)) {
