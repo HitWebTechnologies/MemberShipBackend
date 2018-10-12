@@ -6,6 +6,7 @@ Can be used both on login and signup
 To implement it call the function (checkIfIdValid()) before allowing access or input to database
 
 An example of the function is below , the function takes two parametres , student id and the year 
+
 */
 
  
@@ -15,7 +16,7 @@ checkIfIdValid('h160490v',3); //test the code by running 'node omo.js' in your t
 function checkIfIdValid(std_id, year){
 	console.log("working");
 	try{
-
+		//id parameteres to be changed every year
 		if (std_id.length == 8) {
 			var first3char = std_id.substring(0,3);
 			console.log(first3char);
